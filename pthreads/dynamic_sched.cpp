@@ -21,6 +21,8 @@ using namespace std;
 
 pthread_mutex_t mut1;
 pthread_mutex_t mut2;
+pthread_mutex_t mut3;
+
 
 float a,b,intensity;
 int function,n,granularity,thread_count;
@@ -69,7 +71,8 @@ float parallel_integrate (int argc, char* argv[]){
 
   pthread_mutex_init (&mut1, NULL);
   pthread_mutex_init (&mut2, NULL);
-  
+  pthread_mutex_init (&mut3, NULL);
+
   pthread_t th[thread_count];
   
   float g_sum=0.0;
@@ -91,6 +94,7 @@ float parallel_integrate (int argc, char* argv[]){
 
   pthread_mutex_destroy (&mut1);
   pthread_mutex_destroy (&mut2);
+  pthread_mutex_destroy (&mut3);
 
   return g_sum;
 
@@ -184,13 +188,12 @@ void* th_integrate(void* p) {
 }
 
 bool done(){
-  //pthread_mutex_lock (&mut3);
+  pthread_mutex_lock (&mut3);
   if(limit==-1){
-    //pthread_mutex_unlock (&mut3);
+    pthread_mutex_unlock (&mut3);
     return true;
   }else{
-    //pthread_mutex_unlock (&mut3);
-    //return false;
+    pthread_mutex_unlock (&mut3);
     return false;
   }
 }
