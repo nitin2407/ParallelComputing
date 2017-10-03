@@ -72,7 +72,7 @@ and distrinbute cumputing amongst threads
 */
 float parallel_integrate (int argc, char* argv[]){
 
-  /*getting all input vales from arguments*/  
+  /*getting all input values from arguments*/  
   function = atoi(argv[1]);
   a = atof(argv[2]); 
   b = atof(argv[3]);
