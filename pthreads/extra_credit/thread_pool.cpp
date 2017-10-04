@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <chrono>
+#include<queue>
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,7 +25,7 @@ Declaring mutex
 */
 pthread_mutex_t integrate_mut;
 pthread_mutex_t task_mut;
-pthread_cond_t cond
+pthread_cond_t cond;
 queue<int*> tasks;
 /*
 declaring global variables which will be used by integrating functions also
@@ -36,8 +37,8 @@ long intensity;
 /*
 declaring integrate functions
 */
-void* itr_integrate();
-void* th_integrate();
+void* itr_integrate(void* p);
+void* th_integrate(void* p);
 float parallel_integrate (int argc, char* argv[]);
 
 /*function to submit work to threads*/
@@ -95,6 +96,7 @@ float parallel_integrate (int argc, char* argv[]){
 
   global_sum = 0;
   
+
   /*loop to create threadpool*/  
   for(int j=0;j<thread_count;++j){
     if(sync=="iteration"){
@@ -125,20 +127,21 @@ float parallel_integrate (int argc, char* argv[]){
 }
 
 void submit_work(int* val){
-   pthread_mutex_lock (&task_mut);
-   tasks.push(val);
-   pthread_mutex_lock (&task_mut);
+    pthread_mutex_lock (&task_mut);
+    tasks.push(val);
+    pthread_mutex_unlock (&task_mut);
+    pthread_cond_signal(&cond);
 }
 
 /*iteration level mutual exclusion*/
-void* itr_integrate() {
+void* itr_integrate(void* p) {
     
     pthread_mutex_lock(&task_mut);
-    while (queue.empty()) {
+    while (tasks.empty()) {
             pthread_cond_wait(&cond, &task_mut);
         }
-    int* val = queue.front();
-    queue.pop();
+    int* val = tasks.front();
+    tasks.pop();
     pthread_mutex_unlock(&task_mut);  
 
     float temp = (b-a)/n;
@@ -182,17 +185,16 @@ void* itr_integrate() {
 }
 
 /*thread level mutual exclusion*/
-void* th_integrate(void* p) {
+void* th_integrate(void *p) {
 
     pthread_mutex_lock(&task_mut);
-    while (queue.empty()) {
+    while (tasks.empty()) {
             pthread_cond_wait(&cond, &task_mut);
         }
-    int* val = queue.front();
-    queue.pop();
+    int* val = tasks.front();
+    tasks.pop();
     pthread_mutex_unlock(&task_mut);  
 
-    int* val = (int*) p;
     float temp = (b-a)/n;
     int nmin;
     int nmax;
