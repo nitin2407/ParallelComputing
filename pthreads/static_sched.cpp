@@ -120,12 +120,8 @@ void* itr_integrate(void* p) {
   int nmax;
   float func_param;
 
-  /*calculating the start and begin for each thread*/
-  if(*val==0){
-    nmin=0;
-  }else{
-    nmin=(n/thread_count)*(*val)+1;
-  }
+  /*calculating the start and begin for each thread*/ 
+  nmin=(n/thread_count)*(*val);
   if(*val==(thread_count-1)){
     nmax=n;
   }else{
@@ -166,11 +162,7 @@ void* th_integrate(void* p) {
   float sum = 0.0;
 
   /*calculating the start and begin for each thread*/
-  if(*val==0){
-    nmin=0;
-  }else{
-    nmin=(n/thread_count)*(*val)+1;
-  }
+  nmin=(n/thread_count)*(*val);
   if(*val==(thread_count-1)){
     nmax=n;
   }else{
