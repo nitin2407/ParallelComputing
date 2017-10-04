@@ -214,7 +214,7 @@ void* th_integrate(void* p) {
     int start,stop;
     /*getting the values of begin and end of current computation*/
     getNext(&start,&stop);
-
+    
     /*loop to calculate integration*/
     for(int i=start;i<=stop;i++){
       func_param = a+((i+0.5)*temp); 
@@ -256,14 +256,18 @@ void getNext(int* start,int* stop){
 
   /*locking the mutex to find begin and end*/
   pthread_mutex_lock (&sum_mutex);
-  
-  *start=limit;
-  limit+=granularity;
-  if(limit<n){
-     *stop=limit-1;  
+  if(!done()){
+    *start=limit;
+    limit+=granularity;
+    if(limit<n){
+      *stop=limit-1;  
+    }else{
+      *stop=n-1;
+      limit=-1;
+    }
   }else{
-    *stop=n-1;
-    limit=-1;
+    *start=0;
+    *stop=-1;
   }
   pthread_mutex_unlock (&sum_mutex);
 }
