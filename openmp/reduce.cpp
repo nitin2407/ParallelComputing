@@ -5,14 +5,19 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <cmath>
+#include <cstdlib>
+#include <chrono>
 
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+using namespace std;
+
 void generateReduceData (int* arr, size_t n);
-void reduce_min(int* arr,int argc,char* argv[]);
+int reduce_min(int* arr,int argc,char* argv[]);
 int find_min(int first,int second);
   
 #ifdef __cplusplus
@@ -68,7 +73,7 @@ int reduce_min(int* arr,int argc,char* argv[]){
     string sched = argv[3];
     int granularity = stoi(argv[4]);
     int min=n;
-    omp_set_num_threads(num_proc);
+    omp_set_num_threads(thread_count);
 
     if(granularity==-1){
       if(sched == "static"){
@@ -76,11 +81,18 @@ int reduce_min(int* arr,int argc,char* argv[]){
         for(int i=0;i<n;i++){
           min=find_min(arr[i],min);
         }
-      }else{
+      }else if(sched == "dynamic"){
         #pragma omp parallel for schedule(dynamic)
         for(int i=0;i<n;i++){
           min=find_min(arr[i],min);
         }
+      }else if(sched == "guided"){
+        #pragma omp parallel for schedule(dynamic)
+        for(int i=0;i<n;i++){
+          min=find_min(arr[i],min);
+        }
+      }else{
+        cout<<"incorrect scheduling input"<<endl;
       }
     }else{
       if(sched == "static"){
@@ -88,11 +100,18 @@ int reduce_min(int* arr,int argc,char* argv[]){
         for(int i=0;i<n;i++){
           min=find_min(arr[i],min);
         }
-      }else{
+      }else if(sched == "dynamic"){
         #pragma omp parallel for schedule(dynamic, granularity)
         for(int i=0;i<n;i++){
           min=find_min(arr[i],min);
         }
+      }else if(sched == "guided"){
+        #pragma omp parallel for schedule(guided,granularity)
+        for(int i=0;i<n;i++){
+          min=find_min(arr[i],min);
+        }
+      }else{
+        cout<<"incorrect scheduling input"<<endl;
       }
     }
 
