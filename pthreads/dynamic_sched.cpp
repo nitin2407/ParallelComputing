@@ -127,36 +127,37 @@ float parallel_integrate (int argc, char* argv[]){
 void* itr_integrate(void* p) {
   
   float temp = (b-a)/n;
-  float func_param;
+  float integrate_out;
   
   /*checking if the computation is complete using 'done' function*/
   while(!done()){
 
-    int start,stop;
-    /*getting the values of begin and end of current computation*/
-    getNext(&start,&stop);
-    float *g_sum = (float *) p;
-    
-    /*loop to calculate integration*/
-    for(int i=start;i<=stop;i++){
-      func_param = a+((i+0.5)*temp);
-      /*locking mutex for each iteration*/
-      pthread_mutex_lock (&next_range_mutex); 
-      switch(function){
-        case 1:    
-          *g_sum += (f1(func_param,intensity)*temp);   
-          break; 
-        case 2:
-          *g_sum += (f2(func_param,intensity)*temp);
-          break;  
-        case 3:
-          *g_sum += (f3(func_param,intensity)*temp);  
-          break;   
-        default:
-          *g_sum += (f4(func_param,intensity)*temp);
+      int start,stop;
+      /*getting the values of begin and end of current computation*/
+      getNext(&start,&stop);
+      float *g_sum = (float *) p;
+      
+      /*loop to calculate integration*/
+      for(int i=start;i<=stop;i++){
+          switch(function){
+            case 1:       
+              integrate_out = f1(a+((i+0.5)*temp),intensity)*temp;    
+              break;
+            case 2:
+              integrate_out = f2(a+((i+0.5)*temp),intensity)*temp; 
+              break;
+            case 3:
+              integrate_out = f3(a+((i+0.5)*temp),intensity)*temp;    
+              break;
+            default:
+              integrate_out = f4(a+((i+0.5)*temp),intensity)*temp;
+        }
+
+        /*locking mutex for each iteration*/
+        pthread_mutex_lock (&sum_mutex); 
+        *g_sum += integrate_out;
+        pthread_mutex_unlock (&sum_mutex);
       }
-      pthread_mutex_unlock (&next_range_mutex);
-    }
   }
   return NULL;
 }
@@ -194,9 +195,9 @@ void* chnk_integrate(void* p) {
     }
 
     /*locking mutex once for each chunk in thread*/
-    pthread_mutex_lock (&next_range_mutex);
+    pthread_mutex_lock (&sum_mutex);
     *g_sum = *g_sum + sum;  
-    pthread_mutex_unlock (&next_range_mutex);
+    pthread_mutex_unlock (&sum_mutex);
   }
   return NULL;
 }
@@ -235,9 +236,9 @@ void* th_integrate(void* p) {
   }
 
   /*locking mutex once for each thread*/
-  pthread_mutex_lock (&next_range_mutex);
+  pthread_mutex_lock (&sum_mutex);
   *g_sum = *g_sum + sum;  
-  pthread_mutex_unlock (&next_range_mutex);
+  pthread_mutex_unlock (&sum_mutex);
   
   return NULL;
 }
@@ -255,7 +256,7 @@ bool done(){
 void getNext(int* start,int* stop){
 
   /*locking the mutex to find begin and end*/
-  pthread_mutex_lock (&sum_mutex);
+  pthread_mutex_lock (&next_range_mutex);
   if(!done()){
     *start=limit;
     limit+=granularity;
@@ -269,5 +270,5 @@ void getNext(int* start,int* stop){
     *start=0;
     *stop=-1;
   }
-  pthread_mutex_unlock (&sum_mutex);
+  pthread_mutex_unlock (&next_range_mutex);
 }

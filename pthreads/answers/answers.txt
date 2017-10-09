@@ -1,0 +1,16 @@
+Q1) 
+
+2) Some measurements can be erratic as, due to overhead of time measurements of mutex locks. 
+There can be sudden best and worst cases which makes values differ significantly.   
+	
+3) speed up of low intensity is low because there is more wait time for mutex as calculations are done quickly
+
+4) thread vs iteration: Thread just locks mutex once per thread, so its performance is better , as the total wait time for resources is less.
+
+Q2) 
+
+2) The speed up accross 16 threads is almost similar for chunk and thread level, but for iteration level, speed up is small. 
+This can be bacause of the overhead of locking the mutex again and again in each loop.
+
+3)  At 16 threads and thread level synconization, taking different n and intensity, we observe that speed up is high with higher values of n.
+Intensity is not making a significant difference in speed up. 

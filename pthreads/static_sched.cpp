@@ -118,7 +118,7 @@ void* itr_integrate(void* p) {
   float temp = (b-a)/n;
   int nmin;
   int nmax;
-  float func_param;
+  float integrate_out;
 
   /*calculating the start and begin for each thread*/ 
   nmin=(n/thread_count)*(*val);
@@ -130,22 +130,23 @@ void* itr_integrate(void* p) {
   
   /*loop to calculate integration*/
   for(int i=nmin;i<nmax;i++){
-    func_param = a+((i+0.5)*temp);
-    /*locking mutex for each iteration*/
-    pthread_mutex_lock (&integrate_mut); 
     switch(function){
         case 1:       
-          global_sum = global_sum + (f1(func_param,intensity)*temp);    
+          integrate_out = f1(a+((i+0.5)*temp),intensity)*temp;    
           break;
         case 2:
-          global_sum = global_sum + (f2(func_param,intensity)*temp);  
+          integrate_out = f2(a+((i+0.5)*temp),intensity)*temp; 
           break;
         case 3:
-          global_sum = global_sum + (f3(func_param,intensity)*temp);     
+          integrate_out = f3(a+((i+0.5)*temp),intensity)*temp;    
           break;
         default:
-          global_sum = global_sum + (f4(func_param,intensity)*temp);
+          integrate_out = f4(a+((i+0.5)*temp),intensity)*temp;
     }
+
+    /*locking mutex for each iteration*/
+    pthread_mutex_lock (&integrate_mut); 
+    global_sum += integrate_out;
     pthread_mutex_unlock (&integrate_mut);
   }
   return NULL;
