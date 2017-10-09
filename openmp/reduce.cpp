@@ -17,18 +17,19 @@ extern "C" {
 using namespace std;
 
 void generateReduceData (int* arr, size_t n);
-int reduce_min(int* arr,int argc,char* argv[]);
-int find_min(int first,int second);
-  
+
 #ifdef __cplusplus
 }
 #endif
 
+int reduce_min(int* arr,int argc,char* argv[]);
+int find_min(int first,int second);
+void fill_array(int *a,int max);
 
 int main (int argc, char* argv[]) {
 
   //forces openmp to create the threads beforehand
-#pragma omp parallel
+  #pragma omp parallel
   {
     int fd = open (argv[0], O_RDONLY);
     if (fd != -1) {
@@ -46,7 +47,13 @@ int main (int argc, char* argv[]) {
 
   int * arr = new int [atoi(argv[1])];
 
-  generateReduceData (arr, atoi(argv[1]));
+  //generateReduceData (arr, atoi(argv[1]));
+
+  fill_array(arr,atoi(argv[1]));
+
+  for(int i=0;i<atoi(argv[1]);i++){
+    cout<<arr[i]<<endl;
+  }
   
   std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
     
@@ -68,7 +75,7 @@ int main (int argc, char* argv[]) {
 
 int reduce_min(int* arr,int argc,char* argv[]){
 
-    int n = stoi(argv[1]);
+    int n = stoi(argv[1]); 
     int thread_count = stoi(argv[2]);
     string sched = argv[3];
     int granularity = stoi(argv[4]);
@@ -122,5 +129,15 @@ int find_min(int first,int second){
 
   return first <= second ? first : second;
 
+}
+
+
+void fill_array(int *a,int max)
+{
+	for(int i = 0;i<max; i++)
+	{
+		a[i] = rand()% max + 1;
+ 	}
+ 	return;
 }
 
