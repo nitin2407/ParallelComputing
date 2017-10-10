@@ -5,7 +5,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
-
+#include <algorithm>
 
 #ifdef __cplusplus
 extern "C" {
@@ -45,8 +45,8 @@ int main (int argc, char* argv[]) {
   
   //write code here
 
-
-
+     
+  
   checkMergeSortResult (arr, atoi(argv[1]));
   
   delete[] arr;

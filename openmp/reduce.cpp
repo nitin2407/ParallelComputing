@@ -47,13 +47,13 @@ int main (int argc, char* argv[]) {
 
   int * arr = new int [atoi(argv[1])];
 
-  //generateReduceData (arr, atoi(argv[1]));
+  generateReduceData (arr, atoi(argv[1]));
 
-  fill_array(arr,atoi(argv[1]));
+  //fill_array(arr,atoi(argv[1]));
 
-  for(int i=0;i<atoi(argv[1]);i++){
+  /*for(int i=0;i<atoi(argv[1]);i++){
     cout<<arr[i]<<endl;
-  }
+  }*/
   
   std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
     
@@ -79,50 +79,50 @@ int reduce_min(int* arr,int argc,char* argv[]){
     int thread_count = stoi(argv[2]);
     string sched = argv[3];
     int granularity = stoi(argv[4]);
-    int min=n;
+    int sum=0;
     omp_set_num_threads(thread_count);
 
     if(granularity==-1){
       if(sched == "static"){
-        #pragma omp parallel for schedule(static)
+        #pragma omp parallel for schedule(static) reduction(+:sum)
         for(int i=0;i<n;i++){
-          min=find_min(arr[i],min);
+          sum+=arr[i];
         }
       }else if(sched == "dynamic"){
-        #pragma omp parallel for schedule(dynamic)
+        #pragma omp parallel for schedule(dynamic) reduction(+:sum)
         for(int i=0;i<n;i++){
-          min=find_min(arr[i],min);
+          sum+=arr[i];
         }
       }else if(sched == "guided"){
-        #pragma omp parallel for schedule(dynamic)
+        #pragma omp parallel for schedule(guided) reduction(+:sum)
         for(int i=0;i<n;i++){
-          min=find_min(arr[i],min);
+          sum+=arr[i];
         }
       }else{
         cout<<"incorrect scheduling input"<<endl;
       }
     }else{
       if(sched == "static"){
-        #pragma omp parallel for schedule(static, granularity)
+        #pragma omp parallel for schedule(static, granularity) reduction(+:sum)
         for(int i=0;i<n;i++){
-          min=find_min(arr[i],min);
+          sum+=arr[i];
         }
       }else if(sched == "dynamic"){
-        #pragma omp parallel for schedule(dynamic, granularity)
+        #pragma omp parallel for schedule(dynamic, granularity) reduction(+:sum)
         for(int i=0;i<n;i++){
-          min=find_min(arr[i],min);
+          sum+=arr[i];
         }
       }else if(sched == "guided"){
-        #pragma omp parallel for schedule(guided,granularity)
+        #pragma omp parallel for schedule(guided,granularity) reduction(+:sum)
         for(int i=0;i<n;i++){
-          min=find_min(arr[i],min);
+          sum+=arr[i];
         }
       }else{
         cout<<"incorrect scheduling input"<<endl;
       }
     }
 
-    return min;
+    return sum;
 }
 
 int find_min(int first,int second){
