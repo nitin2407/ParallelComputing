@@ -5,26 +5,36 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
-
+#include <chrono>
+using namespace std;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
   void generatePrefixSumData (int* arr, size_t n);
-  void checkPrefixSumResult (int* arr, size_t n);
-  
-  
+  void checkPrefixSumResult (int* ans, size_t n);
+
+
 #ifdef __cplusplus
 }
 #endif
 
-using namespace std;
 
+int* calcPrefixSum(int* arr, int* pr, int n, int nbthreads);
 int main (int argc, char* argv[]) {
+  int nbthreads, n;
+  if (argc < 3) {
+    std::cerr<<"Usage: "<<argv[0]<<" <n> <nbthreads>"<<std::endl;
+    return -1;
+  }
+
+  nbthreads = atoi(argv[2]);
+  n = atoi(argv[1]);
+
 
   //forces openmp to create the threads beforehand
-#pragma omp parallel
+  #pragma omp parallel
   {
     int fd = open (argv[0], O_RDONLY);
     if (fd != -1) {
@@ -34,59 +44,55 @@ int main (int argc, char* argv[]) {
       std::cerr<<"something is amiss"<<std::endl;
     }
   }
-  
-  if (argc < 3) {
-    std::cerr<<"Usage: "<<argv[0]<<" <n> <nbthreads>"<<std::endl;
-    return -1;
-  }
 
   int * arr = new int [atoi(argv[1])];
-
+  int * pr = new int [atoi(argv[1])+1];
   generatePrefixSumData (arr, atoi(argv[1]));
-  
-  int n = stoi(argv[1]);
-  int num_proc = stoi(argv[2]);
-  int policy_n = 10;
+  omp_set_num_threads(nbthreads);
 
-	int* pr =new int[n+1];
-  omp_set_num_threads(num_proc);
+  std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
+  int* ans = calcPrefixSum(arr, pr, n, nbthreads);
+  std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
+  std::chrono::duration<double> elapsed_seconds = end-start;
+  std::cerr<<elapsed_seconds.count()<<std::endl;
 
-  for(int i=0;i<n;i++){
-    cout<<arr[i]<<" ";
-  }
-  cout<<endl;
+  checkPrefixSumResult(ans, atoi(argv[1]));
 
-  #pragma omp for schedule(dynamic, policy_n)
-  for (int i = 1;i < n; i++)
-  {
-    arr[i] += arr[i-1];
-  }                
-
-  for (int i = policy_n; i < n; i=i+policy_n)
-  {
-    #pragma omp for schedule(static)
-    for (int j = i;j < i+policy_n; j++)
-    {
-      arr[j] += arr[i-1];
-    }
-  }
-
-  pr[0]=0;
-
-  for(int i=0;i<n;i++){
-    pr[i+1] = arr[i];
-  }
-
-  for(int i=0;i<=n;i++){
-    cout<<pr[i]<<" ";
-  }
-  cout<<endl;
-
-
-  checkPrefixSumResult(pr, atoi(argv[1]));
-  
   delete[] arr;
-  delete[] pr;
 
   return 0;
+}
+int* calcPrefixSum(int* arr, int* pr, int n, int nbthreads){
+ int* blocks = new int[nbthreads];
+ pr[0]=0;
+ #pragma omp parallel
+ {
+	int threadNum = omp_get_thread_num();
+	#pragma omp single
+	{
+		blocks = new int[nbthreads+1];
+		blocks[0]=0;
+	}
+	int sum=0;
+	#pragma omp for schedule(static)
+	  for(int i=0; i<n; i++){
+		sum += arr[i];
+		pr[i+1] = sum;
+	  }
+
+	blocks[threadNum+1] = sum;
+	#pragma omp barrier
+ 	int offset=0;
+	for(int i=0; i<(threadNum+1); i++){
+		offset+=blocks[i];
+        }	
+
+	#pragma omp for schedule(static)
+	for(int i=0; i<n; i++){
+		pr[i+1] += offset;
+	 }
+
+ }
+ delete[] blocks;
+ return pr;
 }

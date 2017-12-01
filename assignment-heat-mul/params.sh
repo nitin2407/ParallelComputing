@@ -1,0 +1,9 @@
+#!/bin/sh
+
+NS="5120 16384 32768"
+ST_NS="1160 1638 1800"
+POWERS="20"
+
+PROCS="1 2 4 8 16 32"
+
+RESULTDIR=result/

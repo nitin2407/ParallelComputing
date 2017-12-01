@@ -44,17 +44,12 @@ int main (int argc, char* argv[]) {
     return -1;
   }
  
-  std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
+  
     
   float integrate = parallel_integrate(argc, argv);
   
-  std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
 
-  std::chrono::duration<double> elapsed_seconds = end-start;
-  
   std::cout<<integrate<<std::endl;
-  
-  std::cerr<<elapsed_seconds.count()<<std::endl;
 
   return 0;
 }
@@ -77,124 +72,43 @@ float parallel_integrate (int argc, char* argv[]){
 
 
   omp_set_num_threads(thread_count);
+  std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
+  switch(function){
+    case 1:
+        #pragma omp parallel for schedule(dynamic,granularity) reduction(+:sum)     
+            for(int i=0;i<n;i++){
+                func_param = a+((i+0.5)*temp); 
+                sum += (f1(func_param,intensity)*temp); 
+            }  
+        break; 
+    case 2:
+        #pragma omp parallel for schedule(dynamic,granularity) reduction(+:sum)     
+            for(int i=0;i<n;i++){
+                func_param = a+((i+0.5)*temp); 
+                sum += (f2(func_param,intensity)*temp); 
+            }  
+        break; 
+    case 3:
+        #pragma omp parallel for schedule(dynamic,granularity) reduction(+:sum)     
+            for(int i=0;i<n;i++){
+                func_param = a+((i+0.5)*temp); 
+                sum += (f3(func_param,intensity)*temp); 
+            }  
+        break;   
+    default:
+        #pragma omp parallel for schedule(dynamic,granularity) reduction(+:sum)     
+            for(int i=0;i<n;i++){
+                func_param = a+((i+0.5)*temp); 
+                sum += (f4(func_param,intensity)*temp);  
+            } 
+        break;
+    } 
+      
+    std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
 
-  if(granularity==-1){
-      if(sync == "static"){
-        #pragma omp parallel for schedule(static) reduction(+:sum)
-        for(int i=0;i<n;i++){
-          func_param = a+((i+0.5)*temp); 
-          switch(function){
-          case 1:    
-            sum += (f1(func_param,intensity)*temp);   
-            break; 
-          case 2:
-            sum += (f2(func_param,intensity)*temp);
-            break;  
-          case 3:
-            sum += (f3(func_param,intensity)*temp);  
-            break;   
-          default:
-            sum += (f4(func_param,intensity)*temp);
-          }  
-        }
-      }else if(sync == "dynamic"){
-        #pragma omp parallel for schedule(dynamic) reduction(+:sum)
-        for(int i=0;i<n;i++){
-          func_param = a+((i+0.5)*temp); 
-          switch(function){
-          case 1:    
-            sum += (f1(func_param,intensity)*temp);   
-            break; 
-          case 2:
-            sum += (f2(func_param,intensity)*temp);
-            break;  
-          case 3:
-            sum += (f3(func_param,intensity)*temp);  
-            break;   
-          default:
-            sum += (f4(func_param,intensity)*temp);
-          }  
-        }
-      }else if(sync == "guided"){
-        #pragma omp parallel for schedule(dynamic) reduction(+:sum)
-        for(int i=0;i<n;i++){
-          func_param = a+((i+0.5)*temp); 
-          switch(function){
-          case 1:    
-            sum += (f1(func_param,intensity)*temp);   
-            break; 
-          case 2:
-            sum += (f2(func_param,intensity)*temp);
-            break;  
-          case 3:
-            sum += (f3(func_param,intensity)*temp);  
-            break;   
-          default:
-            sum += (f4(func_param,intensity)*temp);
-          }  
-        }
-      }else{
-        cout<<"incorrect scheduling input"<<endl;
-      }
-    }else{
-      if(sync == "static"){
-        #pragma omp parallel for schedule(static, granularity) reduction(+:sum)
-        for(int i=0;i<n;i++){
-          func_param = a+((i+0.5)*temp); 
-          switch(function){
-          case 1:    
-            sum += (f1(func_param,intensity)*temp);   
-            break; 
-          case 2:
-            sum += (f2(func_param,intensity)*temp);
-            break;  
-          case 3:
-            sum += (f3(func_param,intensity)*temp);  
-            break;   
-          default:
-            sum += (f4(func_param,intensity)*temp);
-          }  
-        }
-      }else if(sync == "dynamic"){
-        #pragma omp parallel for schedule(dynamic, granularity) reduction(+:sum)
-        for(int i=0;i<n;i++){
-          func_param = a+((i+0.5)*temp); 
-          switch(function){
-          case 1:    
-            sum += (f1(func_param,intensity)*temp);   
-            break; 
-          case 2:
-            sum += (f2(func_param,intensity)*temp);
-            break;  
-          case 3:
-            sum += (f3(func_param,intensity)*temp);  
-            break;   
-          default:
-            sum += (f4(func_param,intensity)*temp);
-          }  
-        }
-      }else if(sync == "guided"){
-        #pragma omp parallel for schedule(guided,granularity) reduction(+:sum)
-        for(int i=0;i<n;i++){
-          func_param = a+((i+0.5)*temp); 
-          switch(function){
-          case 1:    
-            sum += (f1(func_param,intensity)*temp);   
-            break; 
-          case 2:
-            sum += (f2(func_param,intensity)*temp);
-            break;  
-          case 3:
-            sum += (f3(func_param,intensity)*temp);  
-            break;   
-          default:
-            sum += (f4(func_param,intensity)*temp);
-          }  
-        }
-      }else{
-        cout<<"incorrect scheduling input"<<endl;
-      }
-    }
+    std::chrono::duration<double> elapsed_seconds = end-start;
+  
+    std::cerr<<elapsed_seconds.count()<<std::endl;
     
     return sum;
 }

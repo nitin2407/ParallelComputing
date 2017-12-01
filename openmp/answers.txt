@@ -1,0 +1,4 @@
+1) Yes, as n is big, with greater values of granularity, each thread has less work to do., so we get better speed up. 
+2) Yes, when n is less, there is not much enough work to do, so there is a lot of overhead of threads. But when n is big, we get a good speed up.
+3) Yes, we observed that there is not much speed up, because in prefix sum, dependencies still exists in code. 
+4) Yes, to get more speed up, we need to parallelize merge sort also.
