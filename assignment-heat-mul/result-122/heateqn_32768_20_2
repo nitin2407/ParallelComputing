@@ -1,0 +1,6 @@
+[mba-c7:70408] *** Process received signal ***
+[mba-c7:70408] Signal: Segmentation fault (11)
+[mba-c7:70408] Signal code: Address not mapped (1)
+[mba-c7:70408] Failing at address: (nil)
+[mba-c7:70408] [ 0] /lib64/libpthread.so.0(+0xf5e0)[0x2ba92140c5e0]
+[mba-c7:70408] *** End of error message ***

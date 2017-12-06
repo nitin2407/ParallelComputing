@@ -1,0 +1,17 @@
+[mba-gpu2:87501] *** Process received signal ***
+[mba-gpu2:87501] Signal: Segmentation fault (11)
+[mba-gpu2:87501] Signal code: Address not mapped (1)
+[mba-gpu2:87501] Failing at address: 0x2288000
+[mba-gpu2:87501] [ 0] /lib64/libpthread.so.0(+0xf5e0)[0x2ad758a105e0]
+[mba-gpu2:87501] [ 1] /lib64/libc.so.6(+0x144830)[0x2ad758d61830]
+[mba-gpu2:87501] [ 2] /apps/pkg/openmpi-1.10.0/rhel7_u2-x86_64/gnu/lib/openmpi/mca_btl_tcp.so(mca_btl_tcp_frag_recv+0x423)[0x2ada578d4d73]
+[mba-gpu2:87501] [ 3] /apps/pkg/openmpi-1.10.0/rhel7_u2-x86_64/gnu/lib/openmpi/mca_btl_tcp.so(+0x69cf)[0x2ada578d39cf]
+[mba-gpu2:87501] [ 4] /apps/pkg/openmpi-1.10.0/rhel7_u2-x86_64/gnu/lib/libopen-pal.so.13(opal_libevent2021_event_base_loop+0x7a4)[0x2ad7592bc934]
+[mba-gpu2:87501] [ 5] /apps/pkg/openmpi-1.10.0/rhel7_u2-x86_64/gnu/lib/libopen-pal.so.13(opal_progress+0x98)[0x2ad759284d08]
+[mba-gpu2:87501] [ 6] /apps/pkg/openmpi-1.10.0/rhel7_u2-x86_64/gnu/lib/openmpi/mca_pml_ob1.so(mca_pml_ob1_recv+0x225)[0x2ada58190465]
+[mba-gpu2:87501] [ 7] /apps/pkg/openmpi-1.10.0/rhel7_u2-x86_64/gnu/lib/libmpi.so.12(MPI_Recv+0x12f)[0x2ad757efceef]
+[mba-gpu2:87501] [ 8] ./heat_eqn[0x409460]
+[mba-gpu2:87501] [ 9] ./heat_eqn[0x408a55]
+[mba-gpu2:87501] [10] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2ad758c3ec05]
+[mba-gpu2:87501] [11] ./heat_eqn[0x408b3f]
+[mba-gpu2:87501] *** End of error message ***

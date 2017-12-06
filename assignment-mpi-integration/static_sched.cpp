@@ -40,6 +40,7 @@ int main (int argc, char* argv[]) {
   b = atoi(argv[3]);
   n = atol(argv[4]);
   intensity = atoi(argv[5]);
+  float intgr=0;
   MPI_Comm_rank (MPI_COMM_WORLD, &rank);
   MPI_Comm_size (MPI_COMM_WORLD, &P);
   
@@ -55,19 +56,29 @@ int main (int argc, char* argv[]) {
   temp = (b-a)/(float)n;
   MPI_Status stat;
   for(int i=start;i<stop;i++){
-    float calc = f1(a+((float)(i+0.5)*temp),intensity)*temp;
-    sum = sum + calc;
+    if(functionid==1){
+      intgr = f1(a+((float)(i+0.5)*temp),intensity)*temp;
+    }
+    else if(functionid==2)
+    {
+      intgr = f2(a+((float)(i+0.5)*temp),intensity)*temp;  
+    }
+    else if(functionid==3)
+    {
+      intgr = f3(a+((float)(i+0.5)*temp),intensity)*temp;  
+    }
+    else if(functionid==4)
+    {
+      intgr = f4(a+((float)(i+0.5)*temp),intensity)*temp;  
+    }
+    sum = sum + intgr;
   }
-  //cout<<sum<<endl;
   if(rank!=0){
     MPI_Send(&sum,1,MPI_FLOAT,0,1,MPI_COMM_WORLD);
   }else{
     float insum=0;
-    //std::cout << "sum bf loop" <<sum<< "\n";
     for(int i=1;i<P;i++){
       MPI_Recv(&insum,1,MPI_FLOAT,i,1,MPI_COMM_WORLD,&stat);
-
-      //std::cout <<"insum"<< insum << "\n";
       sum+=insum;
     }
     std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();

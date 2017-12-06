@@ -1,0 +1,12 @@
+qselect -u npurohi1 | xargs qdel
+
+sed -i -e 's/\r$//' run_matmul.sh
+
+to enable cuda:
+
+module load gcc
+module load openmpi
+module load cuda
+
+
+qdel {1..2}

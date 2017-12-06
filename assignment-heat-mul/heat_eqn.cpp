@@ -73,7 +73,8 @@ double calculate_value(int i, int j)
 
 void cal_heat_equation(int rank,int size){
   int k;
-  double *temp=new double[n*(n/size)];
+  double *temp = (double*)malloc(n*(n/size)*sizeof(double));
+  //new double[n*(n/size)];
   int start=(rank)*n*(n/size);
   int stop = (rank+1)*n*(n/size);
   int cur_power=0;
@@ -121,7 +122,7 @@ void cal_heat_equation(int rank,int size){
     MPI_Bcast(H,n*n,MPI_DOUBLE,root,MPI_COMM_WORLD);
     cur_power++;
   }
-  delete[] temp;
+  free(temp);
   return;
 }
 
@@ -135,29 +136,33 @@ int main (int argc, char* argv[]) {
 
   n = atoi(argv[1]);
   power = atoi(argv[2]); 
-  H = new double[n*n];
+  H = (double*)malloc(n*n*sizeof(double));
+  //H = new double[n*n];
 
   rand_fill_values();
   
   int rank,size;
   
-  std::chrono::time_point<std::chrono::system_clock> start_time=std::chrono::system_clock::now();
-
   MPI_Init (&argc, &argv);
+
+  MPI_Barrier(MPI_COMM_WORLD);
+  std::chrono::time_point<std::chrono::system_clock> start_time=std::chrono::system_clock::now();
 
   MPI_Comm_rank (MPI_COMM_WORLD, &rank);
   MPI_Comm_size (MPI_COMM_WORLD, &size);
   //cout<<"rank "<<rank<<endl;
   //cout<<"size "<<size<<endl;
   cal_heat_equation(rank,size);
-  
+
   MPI_Finalize();
   //std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
-  if(rank==0){  
+  if(rank==0){   
+    //MPI_Barrier(MPI_COMM_WORLD);
     std::chrono::time_point<std::chrono::system_clock> end=std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end-start_time;
     std::cerr<<elapsed_seconds.count()<<std::endl;
   }
-  delete[] H;
+  //delete[] H;
+  free(H);
   return 0;
 }

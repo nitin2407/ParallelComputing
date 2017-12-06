@@ -49,6 +49,7 @@ int main (int argc, char* argv[]) {
   gran = 0.1*n;
   
   if(rank==0){
+    //Master
     start_time=std::chrono::system_clock::now();
     MPI_Status stat_master;
     double sum_temp=0.0;
@@ -64,24 +65,22 @@ int main (int argc, char* argv[]) {
     while(current<n){
       MPI_Recv(&sum_temp, 1, MPI_DOUBLE, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &stat_master);
 		  total_sum += sum_temp;
-      //cout<<total_sum<<endl;
 		  MPI_Send(&current, 1, MPI_INT, stat_master.MPI_SOURCE, 1, MPI_COMM_WORLD);
 		  current += gran;
     }
     for(int i=1;i<size;i++){
       MPI_Recv(&sum_temp,1,MPI_DOUBLE,i,0,MPI_COMM_WORLD,&stat_master);
       total_sum+=sum_temp;
-      //cout<<total_sum<<endl;
       MPI_Send(0,0,MPI_INT,i,2,MPI_COMM_WORLD);
     }
     end = std::chrono::system_clock::now();
   }else{
+    //Worker
     double sum=0.0;
     int start,stop;
     MPI_Status stat_worker;
     while(true){
       MPI_Recv(&start,1,MPI_INT,0,MPI_ANY_TAG,MPI_COMM_WORLD, &stat_worker);
-      //cout<<stat_worker.MPI_TAG<<endl;
       if(stat_worker.MPI_TAG==2){
         break;
       }
@@ -93,13 +92,26 @@ int main (int argc, char* argv[]) {
       sum=0.0;
       //cout<<stop<<endl;
       for(int i=start;i<stop;i++){
-        sum+=f1(a+((i+0.5)*temp),intensity)*temp;
+        if(function==1){
+          sum+=f1(a+((i+0.5)*temp),intensity)*temp;
+        }
+        else if(function==2)
+        {
+          sum+=f2(a+((i+0.5)*temp),intensity)*temp;  
+        }
+        else if(function==3)
+        {
+          sum+=f3(a+((i+0.5)*temp),intensity)*temp;  
+        }
+        else if(function==4)
+        {
+          sum+=f4(a+((i+0.5)*temp),intensity)*temp;  
+        }
       }
       MPI_Send(&sum, 1, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
     }
   }
   MPI_Finalize();
-  //std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
   if(rank==0){  
     std::chrono::duration<double> elapsed_seconds = end-start_time;
     std::cerr<<elapsed_seconds.count()<<std::endl;

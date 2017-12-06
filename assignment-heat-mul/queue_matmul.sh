@@ -34,16 +34,21 @@ done
 
 for POWER in ${POWERS};
 do
-    for N in ${ST_NS};
+    for N in ${WK_NS};
     do	
 
 	for PROC in ${PROCS}
 	do  
-	    FILE=${RESULTDIR}/matmul_${N}_${INTENSITY}_${PROC}
+		REALN=$( echo ${N} \* ${PROC}  | bc)
+		#REALN=$(echo "sqrt ( ${PROC} )*${N}" | bc -l) ;
+		#REALN=$( printf "%.0f" ${REALN} )
+		#REALN=$(( ${REALN}-((${REALN}%${PROC})) ))
+
+	    FILE=${RESULTDIR}/matmul_${REALN}_${INTENSITY}_${PROC}
 	    
 	    if [ ! -f ${FILE} ]
 	    then
-		qsub -d $(pwd) -q mamba -l procs=${PROC} -v N=${N},POWER=${POWER},PROC=${PROC} ./run_matmul.sh
+		qsub -d $(pwd) -q mamba -l procs=${PROC} -v N=${REALN},POWER=${POWER},PROC=${PROC} ./run_matmul.sh
 	    fi
 
 	done

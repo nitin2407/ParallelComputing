@@ -11,6 +11,8 @@ static_sched: static_sched.o
 dynamic_sched: dynamic_sched.o
 	$(LD) $(LDFLAGS) dynamic_sched.o $(ARCHIVES) -o dynamic_sched
 
+adv_sched: adv_sched.o
+	$(LD) $(LDFLAGS) adv_sched.o $(ARCHIVES) -o adv_sched
 
 libfunctions.a: functions.o
 	ar rcs libfunctions.a functions.o
@@ -20,7 +22,6 @@ libintegrate.a: sequential_lib.o
 
 sequential: sequential.o 
 	$(LD) $(LDFLAGS) sequential.o  libintegrate.a $(ARCHIVES) -o sequential
-
 
 plots.pdf:
 	./plots.sh

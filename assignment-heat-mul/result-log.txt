@@ -1,0 +1,128 @@
+heateqn_1160_20_1    heateqn_16384_20_2   heateqn_32768_20_8   matmul_16384_20_1   matmul_32768_20_1
+heateqn_1160_20_16   heateqn_16384_20_4   heateqn_5120_20_1    matmul_16384_20_16  matmul_32768_20_16
+heateqn_1160_20_2    heateqn_16384_20_8   heateqn_5120_20_16   matmul_16384_20_2   matmul_32768_20_2
+heateqn_1160_20_4    heateqn_1800_20_1    heateqn_5120_20_2    matmul_16384_20_32  matmul_32768_20_32
+heateqn_1160_20_8    heateqn_1800_20_16   heateqn_5120_20_4    matmul_16384_20_4   matmul_32768_20_4
+heateqn_1638_20_1    heateqn_1800_20_2    heateqn_5120_20_8    matmul_16384_20_8   matmul_32768_20_8
+heateqn_1638_20_16   heateqn_1800_20_4    matmul_148000_20_1   matmul_23172_20_1   matmul_74000_20_1
+heateqn_1638_20_2    heateqn_1800_20_8    matmul_148000_20_16  matmul_23172_20_16  matmul_74000_20_16
+heateqn_1638_20_4    heateqn_32768_20_1   matmul_148000_20_2   matmul_23172_20_2   matmul_74000_20_2
+heateqn_1638_20_8    heateqn_32768_20_16  matmul_148000_20_32  matmul_23172_20_32  matmul_74000_20_32
+heateqn_16384_20_1   heateqn_32768_20_2   matmul_148000_20_4   matmul_23172_20_4   matmul_74000_20_4
+heateqn_16384_20_16  heateqn_32768_20_4   matmul_148000_20_8   matmul_23172_20_8   matmul_74000_20_8
+[npurohi1@mba-i1 result]$ cd heateqn*
+-bash: cd: heateqn_1160_20_1: Not a directory
+[npurohi1@mba-i1 result]$ cat heateqn*
+0.257002
+3.09849
+0.215755
+0.28255
+0.365538
+0.521829
+5.85573
+6.03948
+0.434384
+0.523822
+568.35
+43.3488
+0.616048
+7.00737
+7.30162
+0.528606
+0.578529
+[mba-c7:70408] *** Process received signal ***
+[mba-c7:70408] Signal: Segmentation fault (11)
+[mba-c7:70408] Signal code: Address not mapped (1)
+[mba-c7:70408] Failing at address: (nil)
+[mba-c7:70408] [ 0] /lib64/libpthread.so.0(+0xf5e0)[0x2ba92140c5e0]
+[mba-c7:70408] *** End of error message ***
+4.98878
+55.1513
+4.21197
+3258.64
+3.53689
+[npurohi1@mba-i1 result]$ cat matmul*
+9.0813
+1.75467
+2.39888
+18.6022
+2.96591
+[mba-c8.uncc.edu:24567] ../../../../../../openmpi-1.10.0/ompi/mca/pml/ob1/pml_ob1_sendreq.c:188 FATAL
+[mba-c5][[58519,1],5][../../../../../../openmpi-1.10.0/ompi/mca/btl/tcp/btl_tcp_endpoint.c:618:mca_btl_tcp_endpoint_recv_blocking] recv(16, 0/8) failed: Connection reset by peer (104)
+[mba-gpu4][[58519,1],25][../../../../../../openmpi-1.10.0/ompi/mca/btl/tcp/btl_tcp_endpoint.c:618:mca_btl_tcp_endpoint_recv_blocking] recv(14, 0/8) failed: Connection reset by peer (104)
+[mba-c8][[58519,1],15][../../../../../../openmpi-1.10.0/ompi/mca/btl/tcp/btl_tcp_endpoint.c:618:mca_btl_tcp_endpoint_recv_blocking] recv(23, 0/8) failed: Connection reset by peer (104)
+[mba-c5.uncc.edu:75114] ../../../../../../openmpi-1.10.0/ompi/mca/pml/ob1/pml_ob1_sendreq.c:188 FATAL
+[mba-gpu4.uncc.edu:04715] ../../../../../../openmpi-1.10.0/ompi/mca/pml/ob1/pml_ob1_sendreq.c:188 FATAL
+4.74071
+37.5711
+5.49355
+[mba-gpu4][[58696,1],25][../../../../../../openmpi-1.10.0/ompi/mca/btl/tcp/btl_tcp_endpoint.c:618:mca_btl_tcp_endpoint_recv_blocking] recv(14, 0/8) failed: Connection reset by peer (104)
+[mba-c5][[58696,1],10][../../../../../../openmpi-1.10.0/ompi/mca/btl/tcp/btl_tcp_endpoint.c:618:mca_btl_tcp_endpoint_recv_blocking] recv(15, 0/8) failed: Connection reset by peer (104)
+[mba-c5.uncc.edu:75141] ../../../../../../openmpi-1.10.0/ompi/mca/pml/ob1/pml_ob1_sendreq.c:188 FATAL
+[mba-gpu4.uncc.edu:04752] ../../../../../../openmpi-1.10.0/ompi/mca/pml/ob1/pml_ob1_sendreq.c:188 FATAL
+[mba-c2.uncc.edu:129815] 2 more processes have sent help message help-mpi-errors.txt / mpi_errors_are_fatal
+[mba-c2.uncc.edu:129815] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+9.53227
+42.2378
+48.7734
+[npurohi1@mba-i1 result]$ cat 148000_20_8
+cat: 148000_20_8: No such file or directory
+[npurohi1@mba-i1 result]$ cat matmul_148000_20_8
+[npurohi1@mba-i1 result]$ cat matmul_16384_20_1
+9.0813
+[npurohi1@mba-i1 result]$ cat matmul_148000_20_1
+[npurohi1@mba-i1 result]$ cat matmul_148000_20_2
+[npurohi1@mba-i1 result]$ cat matmul_148000_20_4
+[npurohi1@mba-i1 result]$ cat matmul_148000_20_8
+[npurohi1@mba-i1 result]$ cat matmul_148000_20_16
+[npurohi1@mba-i1 result]$ cat matmul_148000_20_32
+[npurohi1@mba-i1 result]$ cat matmul_16384_20_1
+9.0813
+[npurohi1@mba-i1 result]$ cat matmul_16384_20_2
+[npurohi1@mba-i1 result]$ cat matmul_16384_20_4
+2.39888
+[npurohi1@mba-i1 result]$ cat matmul_16384_20_8
+[npurohi1@mba-i1 result]$ cat matmul_16384_20_16
+1.75467
+[npurohi1@mba-i1 result]$ cat matmul_16384_20_32
+[npurohi1@mba-i1 result]$ cat matmul_23172_20_32
+[mba-c8.uncc.edu:24567] ../../../../../../openmpi-1.10.0/ompi/mca/pml/ob1/pml_ob1_sendreq.c:188 FATAL
+[mba-c5][[58519,1],5][../../../../../../openmpi-1.10.0/ompi/mca/btl/tcp/btl_tcp_endpoint.c:618:mca_btl_tcp_endpoint_recv_blocking] recv(16, 0/8) failed: Connection reset by peer (104)
+[mba-gpu4][[58519,1],25][../../../../../../openmpi-1.10.0/ompi/mca/btl/tcp/btl_tcp_endpoint.c:618:mca_btl_tcp_endpoint_recv_blocking] recv(14, 0/8) failed: Connection reset by peer (104)
+[mba-c8][[58519,1],15][../../../../../../openmpi-1.10.0/ompi/mca/btl/tcp/btl_tcp_endpoint.c:618:mca_btl_tcp_endpoint_recv_blocking] recv(23, 0/8) failed: Connection reset by peer (104)
+[mba-c5.uncc.edu:75114] ../../../../../../openmpi-1.10.0/ompi/mca/pml/ob1/pml_ob1_sendreq.c:188 FATAL
+[mba-gpu4.uncc.edu:04715] ../../../../../../openmpi-1.10.0/ompi/mca/pml/ob1/pml_ob1_sendreq.c:188 FATAL
+[npurohi1@mba-i1 result]$ cat matmul_23172_20_16
+2.96591
+[npurohi1@mba-i1 result]$ cat matmul_23172_20_8
+[npurohi1@mba-i1 result]$ cat matmul_23172_20_4
+4.74071
+[npurohi1@mba-i1 result]$ cat matmul_23172_20_2
+[npurohi1@mba-i1 result]$ cat matmul_23172_20_1
+18.6022
+[npurohi1@mba-i1 result]$ cat matmul_32768_20_1
+37.5711
+[npurohi1@mba-i1 result]$ cat matmul_32768_20_2
+[npurohi1@mba-i1 result]$ cat matmul_32768_20_4
+9.53227
+[npurohi1@mba-i1 result]$ cat matmul_32768_20_8
+[npurohi1@mba-i1 result]$ cat matmul_32768_20_16
+5.49355
+[npurohi1@mba-i1 result]$ cat matmul_32768_20_32
+[mba-gpu4][[58696,1],25][../../../../../../openmpi-1.10.0/ompi/mca/btl/tcp/btl_tcp_endpoint.c:618:mca_btl_tcp_endpoint_recv_blocking] recv(14, 0/8) failed: Connection reset by peer (104)
+[mba-c5][[58696,1],10][../../../../../../openmpi-1.10.0/ompi/mca/btl/tcp/btl_tcp_endpoint.c:618:mca_btl_tcp_endpoint_recv_blocking] recv(15, 0/8) failed: Connection reset by peer (104)
+[mba-c5.uncc.edu:75141] ../../../../../../openmpi-1.10.0/ompi/mca/pml/ob1/pml_ob1_sendreq.c:188 FATAL
+[mba-gpu4.uncc.edu:04752] ../../../../../../openmpi-1.10.0/ompi/mca/pml/ob1/pml_ob1_sendreq.c:188 FATAL
+[mba-c2.uncc.edu:129815] 2 more processes have sent help message help-mpi-errors.txt / mpi_errors_are_fatal
+[mba-c2.uncc.edu:129815] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+[npurohi1@mba-i1 result]$ cat matmul_74000_20_1
+[npurohi1@mba-i1 result]$ cat matmul_74000_20_2
+[npurohi1@mba-i1 result]$ cat matmul_74000_20_4
+48.7734
+[npurohi1@mba-i1 result]$ cat matmul_74000_20_8
+[npurohi1@mba-i1 result]$ cat matmul_74000_20_16
+42.2378
+[npurohi1@mba-i1 result]$ cat matmul_74000_20_32
+[npurohi1@mba-i1 result]$
+
+
