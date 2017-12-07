@@ -1,0 +1,5 @@
+[mba-c7][[36907,1],20][../../../../../../openmpi-1.10.0/ompi/mca/btl/tcp/btl_tcp_endpoint.c:818:mca_btl_tcp_endpoint_complete_connect] connect() to 192.168.150.232 failed: Connection refused (111)
+[mba-c3][[36907,1],10][../../../../../../openmpi-1.10.0/ompi/mca/btl/tcp/btl_tcp_endpoint.c:818:mca_btl_tcp_endpoint_complete_connect] [mba-c4][[36907,1],15][../../../../../../openmpi-1.10.0/ompi/mca/btl/tcp/btl_tcp_endpoint.c:818:mca_btl_tcp_endpoint_complete_connect] connect() to 192.168.150.232 failed: Connection refused (111)
+[mba-c2][[36907,1],8][../../../../../../openmpi-1.10.0/ompi/mca/btl/tcp/btl_tcp_endpoint.c:818:mca_btl_tcp_endpoint_complete_connect] connect() to 192.168.150.232 failed: Connection refused (111)
+[mba-c7][[36907,1],25][../../../../../../openmpi-1.10.0/ompi/mca/btl/tcp/btl_tcp_endpoint.c:818:mca_btl_tcp_endpoint_complete_connect] connect() to 192.168.150.232 failed: Connection refused (111)
+connect() to 192.168.150.232 failed: Connection refused (111)

@@ -9,70 +9,70 @@ fi
 
 #strong scaling
 
-for INTENSITY in ${INTENSITIES};
+for POWER in ${POWERS};
 do
     for N in ${NS};
     do
-	FILE=${RESULTDIR}/sequential_${N}_${INTENSITY}
+	FILE=${RESULTDIR}/heateqn_seq_${N}_${POWER}
 	if [ ! -f ${FILE} ]
 	then
-	    echo missing sequential result file "${FILE}". Have you run queue_sequential and waited for completion?
+	    echo missing sequential result file "${FILE}". Have you run queue_heateqn_seq and waited for completion?
 	fi
 
-	seqtime=$(cat ${RESULTDIR}/sequential_${N}_${INTENSITY})
+	seqtime=$(cat ${RESULTDIR}/heateqn_seq_${N}_${POWER})
 	
 	for PROC in ${PROCS}
 	do
 	
-	    FILE=${RESULTDIR}/static_${N}_${INTENSITY}_${PROC}
+	    FILE=${RESULTDIR}/heateqn_${N}_${POWER}_${PROC}
 	    
 	    if [ ! -f ${FILE} ]
 	    then
-		echo missing static result file "${FILE}". Have you run queue_static and waited for completion?
+		echo missing heateqn result file "${FILE}". Have you run queue_heateqn and waited for completion?
 	    fi
 
-	    partime=$(cat ${RESULTDIR}/static_${N}_${INTENSITY}_${PROC})
+	    partime=$(cat ${RESULTDIR}/heateqn_${N}_${POWER}_${PROC})
 	    
 	    echo ${PROC} ${seqtime} ${partime}
-	done > ${RESULTDIR}/speedup_static_ni_${N}_${INTENSITY}
+	done > ${RESULTDIR}/speedup_heateqn_ni_${N}_${POWER}
 
 
-	GNUPLOTSTRONG="${GNUPLOTSTRONG} set title 'strong scaling. n=${N} i=${INTENSITY}'; plot '${RESULTDIR}/speedup_static_ni_${N}_${INTENSITY}' u 1:(\$2/\$3);"
+	GNUPLOTSTRONG="${GNUPLOTSTRONG} set title 'strong scaling. n=${N} i=${POWER}'; plot '${RESULTDIR}/speedup_heateqn_ni_${N}_${POWER}' u 1:(\$2/\$3);"
     done
 done
 
 #weak scaling
 
-for INTENSITY in ${INTENSITIES};
+for POWER in ${POWERS};
 do
-    for N in ${NS};
+    for N in ${WK_NS};
     do
 	
 	for PROC in ${PROCS}
 	do
 	    REALN=$( echo ${N} \* ${PROC}  | bc)
 	    
-	    FILE=${RESULTDIR}/static_${REALN}_${INTENSITY}_${PROC}
+	    FILE=${RESULTDIR}/heateqn_${REALN}_${POWER}_${PROC}
 	    
 	    if [ ! -f ${FILE} ]
 	    then
-		echo missing static result file "${FILE}". Have you run queue_static and waited for completion?
+		echo missing heateqn result file "${FILE}". Have you run queue_heateqn and waited for completion?
 	    fi
 
-	    partime=$(cat ${RESULTDIR}/static_${REALN}_${INTENSITY}_${PROC})
+	    partime=$(cat ${RESULTDIR}/heateqn_${REALN}_${POWER}_${PROC})
 	    
 	    echo ${PROC} ${partime}
-	done > ${RESULTDIR}/time_static_ni_${N}_${INTENSITY}
+	done > ${RESULTDIR}/time_heateqn_ni_${N}_${POWER}
 
 
-	GNUPLOTWEAK="${GNUPLOTWEAK} set title 'weak scaling. n=${N} i=${INTENSITY}'; plot '${RESULTDIR}/time_static_ni_${N}_${INTENSITY}' u 1:2;"
+	GNUPLOTWEAK="${GNUPLOTWEAK} set title 'weak scaling. n=${N} i=${POWER}'; plot '${RESULTDIR}/time_heateqn_ni_${N}_${POWER}' u 1:2;"
     done
 done
 
 
 gnuplot <<EOF
 set terminal pdf
-set output 'static_sched_plots.pdf'
+set output 'heateqn_plots.pdf'
 
 set style data linespoints
 

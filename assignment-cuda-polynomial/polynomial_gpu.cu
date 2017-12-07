@@ -20,7 +20,7 @@ __global__ void polynomial_expansion (float* poly, int degree,
   
     if(index<n)
     {
-      array[i] = polynomial (array[i], poly, degree);  
+      array[index] = polynomial (array[index], poly, degree);  
     }
 
 }
@@ -48,7 +48,7 @@ int main (int argc, char* argv[]) {
   poly = (float *)malloc(size_poly);
 
   cudaMalloc((void **)&d_array,size_array);
-  cudaMalloc((void **)&d_poly,size_poly;
+  cudaMalloc((void **)&d_poly,size_poly);
 
 
   for (int i=0; i<n; ++i)

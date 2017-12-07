@@ -16,7 +16,7 @@ void map_task(int itask, char *file_name, KeyValue *kv, void *ptr)
     int flag = stat(file_name,&file_stat);
     if (flag < 0) 
     {
-        cout<<"ERROR: File could not be read"<<endl;
+        cerr<<"ERROR: File could not be read"<<endl;
         MPI_Abort(MPI_COMM_WORLD,1);
     }
     int file_size = file_stat.st_size;
@@ -47,9 +47,11 @@ int main(int argc, char *argv[])
         std::cerr<<"usage: mpirun "<<argv[0]<<" <file1> <file2>..."<<std::endl;
         return -1;
     }
+
     MPI_Init(&argc,&argv);
 
     int rank,size;
+
     MPI_Comm_rank(MPI_COMM_WORLD,&rank);
     MPI_Comm_size(MPI_COMM_WORLD,&size);
 
@@ -64,10 +66,13 @@ int main(int argc, char *argv[])
     int nunique = mr->reduce(reduce_task,NULL);
     /*Gathering every node's data to node 0*/
     mr->gather(1);
+    
     MPI_Barrier(MPI_COMM_WORLD);
-      /*Printing to a file*/
+    
+    /*Printing to a file*/
     char *outp = new char[6];
     strncpy(outp, "output", sizeof(outp)-1);
+    
     mr->print(outp, 1, 0, 1, 5, 1);
 
     MPI_Barrier(MPI_COMM_WORLD);
